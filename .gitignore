@@ -1,0 +1,31 @@
+gitignore
+# Java / Maven / Gradle (backend)
+target/
+build/
+*.class
+*.jar
+.mvn/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Node / Next.js (frontend)
+node_modules/
+.next/
+out/
+dist/
+
+# Variables de entorno — NUNCA subir credenciales
+.env
+.env.local
+.env.*.local
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+
+# Docker
+*.pid
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
