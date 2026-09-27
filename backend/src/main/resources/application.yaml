@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: ecommerce
+  datasource:
+    url: jdbc:postgresql://localhost:5433/${POSTGRES_DB:ecommerce}
+    username: ${POSTGRES_USER:ecommerce_user}
+    password: ${POSTGRES_PASSWORD:dev_password_123}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
