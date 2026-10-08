@@ -3,7 +3,9 @@ package com.ecommerce.modules.user.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ecommerce.modules.user.dto.request.LoginRequest;
 import com.ecommerce.modules.user.dto.request.RegisterRequest;
+import com.ecommerce.modules.user.dto.response.LoginResponse;
 import com.ecommerce.modules.user.dto.response.UserResponse;
 import com.ecommerce.modules.user.service.UserService;
 
@@ -29,4 +31,8 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);        
     }  
 
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(userService.login(request));
+    }
 }

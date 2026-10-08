@@ -5,6 +5,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.ecommerce.modules.user.dto.request.LoginRequest;
+import com.ecommerce.modules.user.dto.response.LoginResponse;
 import com.ecommerce.modules.user.dto.request.RegisterRequest;
 import com.ecommerce.modules.user.dto.response.UserResponse;
 import com.ecommerce.modules.user.entity.Role;
@@ -21,6 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public UserResponse register(RegisterRequest request) {
         if (userRepository.existsByEmailAndDeletedAtIsNull(request.email())) {
@@ -37,4 +40,16 @@ public class UserService {
         User saved = userRepository.save(user);
         return userMapper.toResponse(saved);
     }    
+
+    public LoginResponse login(LoginRequest request) {
+        User user = userRepository.findByEmailAndDeletedAtIsNull(request.email())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales inválidas"));
+
+        if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales inválidas");
+        }
+
+        String token = jwtService.generateToken(user);
+        return new LoginResponse(token, "Bearer", jwtService.getExpirationSeconds());
+    }
 }
