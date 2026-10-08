@@ -29,3 +29,6 @@ dist/
 # Sistema operativo
 .DS_Store
 Thumbs.db
+
+#Bruno api
+/ecommerce

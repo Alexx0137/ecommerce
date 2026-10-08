@@ -1,4 +1,4 @@
-name: local
+name: ecommerce
 variables:
   - name: base_url
     value: http://localhost:8080
