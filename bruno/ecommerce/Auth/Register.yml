@@ -1,5 +1,5 @@
 info:
-  name: Crear uauario
+  name: Register
   type: http
   seq: 1
 
@@ -11,8 +11,8 @@ http:
     data: |-
       {
         "name": "Nelson",
-        "email": "nelson@mail.com",
-        "password": "admin123"
+        "email": "nelson.a@mail.com",
+        "password": "Test1234!"
       }
   auth: inherit
 
