@@ -5,8 +5,8 @@ import org.mapstruct.Mapper;
 import com.ecommerce.modules.user.dto.response.UserResponse;
 import com.ecommerce.modules.user.entity.User;
 
-@Mapper(componentModel = "Spring")
+@Mapper(componentModel = "spring")
 public interface UserMapper {
     
-    UserResponse toRespone(User user);  
+    UserResponse toResponse(User user);  
 }

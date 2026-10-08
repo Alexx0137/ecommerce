@@ -24,7 +24,7 @@ public class UserService {
 
     public UserResponse register(RegisterRequest request) {
         if (userRepository.existsByEmailAndDeletedAtIsNull(request.email())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "El email ya está en registrado");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "El email ya está registrado");
         }
 
         User user = User.builder()
@@ -35,6 +35,6 @@ public class UserService {
             .build();
 
         User saved = userRepository.save(user);
-        return userMapper.toRespone(saved);
+        return userMapper.toResponse(saved);
     }    
 }
