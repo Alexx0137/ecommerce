@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5433/${POSTGRES_DB:ecommerce}
     username: ${POSTGRES_USER:ecommerce_user}
-    password: ${POSTGRES_PASSWORD:dev_password_123}
+    password: ${POSTGRES_PASSWORD:changeme}
   jpa:
     hibernate:
       ddl-auto: validate
