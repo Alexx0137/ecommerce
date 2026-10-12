@@ -52,4 +52,10 @@ public class UserService {
         String token = jwtService.generateToken(user);
         return new LoginResponse(token, "Bearer", jwtService.getExpirationSeconds());
     }
+
+    public UserResponse getCurrentUser(Long userId) {
+        User user = userRepository.findByIdAndDeletedAtIsNull(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario no disponible"));
+        return userMapper.toResponse(user);     
+    }
 }
