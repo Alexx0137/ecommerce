@@ -136,8 +136,12 @@ Aplican a todos los módulos, no solo a `user` — para que el proyecto se sient
 | Mapper | `<Entidad>Mapper` (interfaz MapStruct) | `UserMapper.java` → genera `UserMapperImpl` | Mapeo entidad↔DTO generado en compilación, no a mano ni con reflexión en runtime |
 | Seeder | `<Entidad>Seeder` | `UserSeeder.java` | `CommandLineRunner` protegido con `@Profile("dev")` — nunca corre en QA/producción |
 | Enum | Nombre singular descriptivo | `Role.java` | Mapeado con `@Enumerated(EnumType.STRING)`, nunca `ORDINAL` |
+| Excepción de dominio | `<Hecho>Exception`, en `modules.<dominio>.exception`, hereda de una categoría | `EmailAlreadyRegisteredException.java` | Nombra lo que pasó en el negocio; nunca lleva código HTTP |
+| Categoría de excepción | Clase `abstract` en `common.exception` | `ConflictException.java` | El `GlobalExceptionHandler` solo conoce categorías: `common` no depende de ningún módulo |
 
 **Principio general detrás de "un servicio, no uno por acción":** un servicio por caso de uso (`CreateUserService`, `UpdateUserService`...) es un patrón válido de Clean Architecture, pero resuelve un problema de escala/complejidad que este proyecto no tiene todavía — mismo criterio que la decisión monolito-vs-microservicios de la Sección 5.1/5.2: no se paga complejidad que el tamaño actual del dominio no justifica.
+
+**Manejo de errores**: el service lanza excepciones de dominio, nunca `ResponseStatusException` ni códigos HTTP. El `GlobalExceptionHandler` (`@RestControllerAdvice`, en `common.exception`) hereda de `ResponseEntityExceptionHandler` y responde todos los errores con `ProblemDetail` (RFC 9457, `application/problem+json`); la validación agrega una propiedad `errors` con el mensaje de cada campo. Los 401/403 de Spring Security ocurren en los filtros y no pasan por este handler.
 
 **Ubicación de los DTOs**: dentro de `dto/`, separados por dirección del dato en `dto/request/` y `dto/response/` (ej. `dto/request/RegisterRequest.java`, `dto/response/UserResponse.java`). Escala mejor que una carpeta plana cuando un módulo acumula decenas de DTOs.
 
