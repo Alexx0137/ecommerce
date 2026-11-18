@@ -15,6 +15,11 @@ import com.ecommerce.modules.user.exception.UserNotAvailableException;
 import com.ecommerce.modules.user.mapper.UserMapper;
 import com.ecommerce.modules.user.repository.UserRepository;
 
+import java.util.Optional;
+import java.util.UUID;
+
+import jakarta.annotation.PostConstruct;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -25,6 +30,12 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private String dummyHash;
+
+    @PostConstruct
+    void initDummyHash() {
+        dummyHash = passwordEncoder.encode(UUID.randomUUID().toString());
+    }
 
     public UserResponse register(RegisterRequest request) {
         if (userRepository.existsByEmailAndDeletedAtIsNull(request.email())) {
@@ -43,14 +54,15 @@ public class UserService {
     }    
 
     public LoginResponse login(LoginRequest request) {
-        User user = userRepository.findByEmailAndDeletedAtIsNull(request.email())
-                .orElseThrow(InvalidCredentialsException::new);
+        Optional<User> user = userRepository.findByEmailAndDeletedAtIsNull(request.email());
+        String hash = user.map(User::getPasswordHash).orElse(dummyHash);
+        boolean passwordMatches = passwordEncoder.matches(request.password(), hash);
 
-        if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
+        if (user.isEmpty() || !passwordMatches) {
             throw new InvalidCredentialsException();
         }
 
-        String token = jwtService.generateToken(user);
+        String token = jwtService.generateToken(user.get());
         return new LoginResponse(token, "Bearer", jwtService.getExpirationSeconds());
     }
 
