@@ -1,12 +1,12 @@
-# Especificación Técnica — Proyecto E-commerce (Portafolio)
+# Especificación Técnica — Proyecto E-commerce
 
 ## 1. Resumen ejecutivo
 
-Este documento especifica el desarrollo de una plataforma de comercio electrónico (e-commerce) full-stack, concebida como proyecto de portafolio técnico. A diferencia de un proyecto de negocio real, el objetivo primario es pedagógico: servir como vehículo práctico para adquirir y demostrar competencias en **arquitectura de microservicios, containerización con Docker y despliegue en infraestructura cloud (AWS)**.
+Tienda online full-stack donde los usuarios pueden explorar un catálogo de productos, agregarlos a un carrito, ajustar las cantidades y pagar de forma segura. El backend está construido con Java 21 y Spring Boot, el frontend con Next.js y la base de datos es PostgreSQL. La arquitectura parte de un monolito modular, se despliega en AWS y evoluciona hacia microservicios independientes.
 
 El dominio de e-commerce se eligió porque, a diferencia de un CRUD o un To-Do list, presenta problemas reales de ingeniería: persistencia transaccional, integridad de datos entre entidades relacionadas, integración con servicios de pago externos, manejo de estado en el cliente, y suficiente complejidad de dominio como para justificar una eventual descomposición en microservicios.
 
-Este documento está dirigido a cualquier desarrollador (incluyendo el propio autor en el futuro) que necesite entender, retomar o extender el proyecto sin contexto previo: define el alcance, las decisiones de arquitectura y stack, el modelo de datos, y el plan de evolución por fases.
+Este documento está dirigido a cualquier desarrollador que necesite entender, retomar o extender el proyecto sin contexto previo: define el alcance, las decisiones de arquitectura y stack, el modelo de datos, y el plan de evolución por fases.
 
 > **v1.1** — se incorporó control de concurrencia (`version`, `idempotency_key`), se unificó el carrito en PostgreSQL, se definió el flujo de reserva de stock (*inventory hold*) en el checkout, y se adelantaron Swagger/testing a la Fase 1.
 
@@ -17,7 +17,7 @@ Este documento está dirigido a cualquier desarrollador (incluyendo el propio au
 - Construir una plataforma de e-commerce funcional de extremo a extremo: catálogo, carrito, checkout con pago real (modo test), gestión de órdenes y panel administrativo.
 - Modelar correctamente un dominio con relaciones no triviales (usuarios, productos con variantes, órdenes, pagos), aplicando integridad transaccional.
 
-### 2.2 Objetivos de aprendizaje técnico (prioridad real del proyecto)
+### 2.2 Objetivos técnicos
 
 - **Docker**: multi-stage builds, redes entre contenedores, volúmenes, `docker-compose` para orquestar un entorno local multi-servicio.
 - **Arquitectura de microservicios**: descomposición de un dominio, comunicación síncrona (REST) y asíncrona (mensajería), patrones de resiliencia (circuit breaker), consistencia eventual (Saga).
@@ -75,7 +75,7 @@ Una feature entra al MVP solo si es indispensable para completar el flujo compra
 | Envío de emails | Mailtrap (local/QA) / Amazon SES (prod) | Captura de emails de prueba sin riesgo de envío accidental; SES para envío real |
 | Pagos | Stripe (o MercadoPago) | Pasarela de pago con modo sandbox y manejo de webhooks |
 | Contenerización | Docker + Docker Compose | Empaquetado reproducible del entorno local |
-| Cloud | AWS (EC2/ECS, RDS, S3, SES, ECR, Secrets Manager, CloudWatch) | Plataforma cloud objetivo de aprendizaje del proyecto |
+| Cloud | AWS (EC2/ECS, RDS, S3, SES, ECR, Secrets Manager, CloudWatch) | Plataforma de despliegue del proyecto |
 | CI/CD | GitHub Actions | Automatización de build, test y despliegue por entorno |
 | Mensajería (fase 2) | RabbitMQ o Kafka | Comunicación asíncrona entre microservicios |
 
@@ -590,7 +590,7 @@ El código de la aplicación nunca debe saber contra qué proveedor concreto hab
 - CI/CD completo a producción con aprobación manual
 - CloudWatch con alarmas, logging estructurado
 - Ampliación de cobertura de tests y documentación de API a los módulos nuevos de las fases 2-3 (microservicios)
-- **Entregable**: proyecto listo para presentar en portafolio con documentación técnica completa
+- **Entregable**: proyecto desplegado con documentación técnica completa
 
 ## 10. Criterios de éxito y buenas prácticas
 
